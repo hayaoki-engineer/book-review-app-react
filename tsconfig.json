@@ -1,4 +1,12 @@
 {
+  "compilerOptions": {
+    "types": ["jest", "node", "@testing-library/jest-dom"], // Jest, Node.js, Jest DOMの型定義を追加
+    "module": "ESNext",
+    "target": "ESNext",
+    "strict": true,
+    "jsx": "react-jsx",
+    "esModuleInterop": true
+  },
   "files": [],
   "references": [
     { "path": "./tsconfig.app.json" },

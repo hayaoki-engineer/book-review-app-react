@@ -7,7 +7,7 @@ test("ログインフォームのエラーメッセージを確認", async ({ pa
   await page.click('button[type="submit"]');
 
   // エラーメッセージの確認
-  const errorMessage = await page.locator(
+  const errorMessage = page.locator(
     "text=メールアドレスとパスワードを入力してください。"
   );
   await expect(errorMessage).toBeVisible();
