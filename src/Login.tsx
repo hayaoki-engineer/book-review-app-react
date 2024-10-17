@@ -1,44 +1,93 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+
+// フォームに対応する型を定義
+type LoginFormValues = {
+  email: string;
+  password: string;
+};
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValues>();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!email || !password) {
-      setError("メールアドレスとパスワードを入力してください。");
-    } else {
-      setError("");
+  // ログインフォームのデータをAPIに送信
+  const onSubmit = async (data: LoginFormValues) => {
+    try {
+      const requestBody = {
+        email: data.email,
+        password: data.password,
+      };
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/signin`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error:", errorData); // エラーの詳細をコンソールに表示
+        setErrorMessage(
+          "ログインに失敗しました。メールアドレスまたはパスワードが正しくありません。"
+        );
+        return;
+      }
+
+      // ログイン成功時にリダイレクト
+      navigate("/dashboard"); // ダッシュボードなどの次のページにリダイレクト
+    } catch (error) {
+      setErrorMessage("ログインに失敗しました。");
     }
   };
 
   return (
     <div>
-      <h2>ログイン</h2>
-      <form onSubmit={handleSubmit}>
+      <h1>Login</h1>
+      {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <label htmlFor="email">メールアドレス:</label>
+          <label>Email:</label>
           <input
-            id="email"
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            {...register("email", {
+              required: "メールアドレスは必須です",
+              pattern: {
+                value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+                message: "正しいメールアドレスを入力してください",
+              },
+            })}
           />
+          {errors.email && (
+            <p style={{ color: "red" }}>{errors.email.message}</p>
+          )}
         </div>
         <div>
-          <label htmlFor="password">パスワード:</label>
+          <label>Password:</label>
           <input
-            id="password"
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            {...register("password", { required: "パスワードは必須です" })}
           />
+          {errors.password && (
+            <p style={{ color: "red" }}>{errors.password.message}</p>
+          )}
         </div>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <button type="submit">ログイン</button>
+        <button type="submit">Login</button>
       </form>
+      <p>
+        アカウントをお持ちでない方はこちら <a href="/signup">新規登録</a>
+      </p>
     </div>
   );
 };
