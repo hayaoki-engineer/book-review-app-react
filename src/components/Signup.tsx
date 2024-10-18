@@ -2,6 +2,17 @@ import React, { useState, useEffect } from "react";
 import Compressor from "compressorjs";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  FormErrorMessage,
+  Heading,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 
 // フォームに対応する型を定義
 type SignupFormValues = {
@@ -86,50 +97,65 @@ const Signup = () => {
   };
 
   return (
-    <div>
-      <h1>Sign Up</h1>
-      {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+    <Box maxW="md" mx="auto" mt={10} p={5} borderWidth="1px" borderRadius="lg">
+      <Heading as="h1" mb={6} textAlign="center">
+        Sign Up
+      </Heading>
+      {errorMessage && (
+        <Text color="red.500" mb={4} textAlign="center">
+          {errorMessage}
+        </Text>
+      )}
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label>Name:</label> {/* ユーザー名の入力フィールド */}
-          <input
-            type="text"
-            {...register("name", { required: "ユーザー名は必須です" })}
-          />
-          {errors.name?.message && (
-            <p style={{ color: "red" }}>{String(errors.name.message)}</p>
-          )}
-        </div>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            {...register("email", { required: "メールアドレスは必須です" })}
-          />
-          {errors.email?.message && (
-            <p style={{ color: "red" }}>{String(errors.email.message)}</p>
-          )}
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            {...register("password", { required: "パスワードは必須です" })}
-          />
-          {errors.password?.message && (
-            <p style={{ color: "red" }}>{String(errors.password.message)}</p>
-          )}
-        </div>
-        <div>
-          <label>Avatar:</label>
-          <input type="file" accept="image/*" onChange={handleImageChange} />
-        </div>
-        <button type="submit">Sign Up</button>
+        <VStack spacing={4} align="stretch">
+          <FormControl isInvalid={!!errors.name}>
+            <FormLabel>Name</FormLabel>
+            <Input
+              type="text"
+              {...register("name", { required: "ユーザー名は必須です" })}
+            />
+            <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
+          </FormControl>
+
+          <FormControl isInvalid={!!errors.email}>
+            <FormLabel>Email</FormLabel>
+            <Input
+              type="email"
+              {...register("email", { required: "メールアドレスは必須です" })}
+            />
+            <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
+          </FormControl>
+
+          <FormControl isInvalid={!!errors.password}>
+            <FormLabel>Password</FormLabel>
+            <Input
+              type="password"
+              {...register("password", { required: "パスワードは必須です" })}
+            />
+            <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
+          </FormControl>
+
+          <FormControl>
+            <FormLabel>Avatar</FormLabel>
+            <Input type="file" accept="image/*" onChange={handleImageChange} />
+          </FormControl>
+
+          <Button type="submit" colorScheme="blue" width="full">
+            Sign Up
+          </Button>
+        </VStack>
       </form>
-      <p>
-        既にアカウントをお持ちですか？ <a href="/login">ログイン</a>
-      </p>
-    </div>
+      <Text mt={4} textAlign="center">
+        既にアカウントをお持ちですか？{" "}
+        <Button
+          variant="link"
+          colorScheme="blue"
+          onClick={() => navigate("/login")}
+        >
+          ログイン
+        </Button>
+      </Text>
+    </Box>
   );
 };
 
