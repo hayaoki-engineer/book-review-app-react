@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Compressor from "compressorjs";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +21,13 @@ const Signup = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  console.log(import.meta.env.VITE_API_BASE_URL); // API URLの確認
+  // ログイン済みの場合はリダイレクト
+  useEffect(() => {
+    const isLoggedIn = !!localStorage.getItem("authToken");
+    if (isLoggedIn) {
+      navigate("/book-reviews"); // ログイン済みなら書籍レビュー画面にリダイレクト
+    }
+  }, [navigate]);
 
   // 画像圧縮処理
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,7 +50,7 @@ const Signup = () => {
   const onSubmit = async (data: SignupFormValues) => {
     try {
       const requestBody = {
-        name: data.name, // ユーザー名を追加
+        name: data.name,
         email: data.email,
         password: data.password,
       };
@@ -60,16 +66,20 @@ const Signup = () => {
         }
       );
 
-      // リクエストが失敗した場合はエラーメッセージを表示
       if (!response.ok) {
         const errorData = await response.json();
         console.error("Error:", errorData); // 詳細エラーメッセージをコンソールに表示
         setErrorMessage(errorData.ErrorMessageJP || "登録に失敗しました。");
-        return; // ここで処理を中断してリダイレクトを防ぐ
+        return;
       }
 
-      // 成功した場合、ログインページにリダイレクト
-      navigate("/login");
+      // レスポンスからトークンとユーザー名を取得して保存
+      const { token, userName } = await response.json();
+      localStorage.setItem("authToken", token); // トークンを保存
+      localStorage.setItem("userName", userName); // ユーザー名を保存
+
+      // 新規登録成功後に書籍レビュー画面にリダイレクト
+      navigate("/book-reviews");
     } catch {
       setErrorMessage("登録に失敗しました。");
     }
@@ -124,11 +134,3 @@ const Signup = () => {
 };
 
 export default Signup;
-
-/*
-
-taisei
-taisei@taisei.com
-taisei
-
-*/

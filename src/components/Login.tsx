@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
@@ -16,6 +16,14 @@ const Login = () => {
   } = useForm<LoginFormValues>();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  // ログイン済みの場合はリダイレクト
+  useEffect(() => {
+    const isLoggedIn = !!localStorage.getItem("authToken");
+    if (isLoggedIn) {
+      navigate("/book-reviews"); // ログイン済みなら書籍レビュー画面にリダイレクト
+    }
+  }, [navigate]);
 
   // ログインフォームのデータをAPIに送信
   const onSubmit = async (data: LoginFormValues) => {
@@ -45,9 +53,14 @@ const Login = () => {
         return;
       }
 
+      // レスポンスからトークンを取得し、localStorageに保存
+      const { token, userName } = await response.json();
+      localStorage.setItem("authToken", token); // トークンを保存
+      localStorage.setItem("userName", userName); // ユーザー名を保存
+
       // ログイン成功時にリダイレクト
-      navigate("/dashboard"); // ダッシュボードなどの次のページにリダイレクト
-    } catch (error) {
+      navigate("/book-reviews"); // 書籍レビュー一覧画面にリダイレクト
+    } catch {
       setErrorMessage("ログインに失敗しました。");
     }
   };
