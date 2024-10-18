@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../src/redux/store"; 
+import { RootState } from "../redux/store";
 import {
   Box,
   Flex,
@@ -11,7 +11,6 @@ import {
   Link,
 } from "@chakra-ui/react";
 import Pagination from "./Pagination";
-
 
 // 書籍レビューの型定義
 type BookReview = {
@@ -32,8 +31,8 @@ const BookReviewList = () => {
 
   useEffect(() => {
     const currentPage = offset / 10 + 1;
-    console.log(`現在のページ: ${currentPage}`); 
-    
+    console.log(`現在のページ: ${currentPage}`);
+
     // APIからデータを取得する関数
     const fetchReviews = async () => {
       try {

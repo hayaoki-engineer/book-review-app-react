@@ -1,13 +1,12 @@
-import { Route, Routes } from 'react-router-dom'
-import Login from './Login'
-import Signup from './Signup';
-import BookReviewList from './BookReviewList';
-import { ChakraProvider } from '@chakra-ui/react';
-import { Provider } from 'react-redux';
-import { store } from './redux/store';
+import { Route, Routes } from "react-router-dom";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
+import BookReviewList from "./components/BookReviewList";
+import { ChakraProvider } from "@chakra-ui/react";
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
 
 function App() {
-
   return (
     <Provider store={store}>
       <ChakraProvider>
@@ -21,4 +20,4 @@ function App() {
   );
 }
 
-export default App
+export default App;

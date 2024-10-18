@@ -1,7 +1,7 @@
 import { Button, HStack } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
-import { nextPage, prevPage } from "../src/redux/store";
-import { RootState } from "../src/redux/store";
+import { nextPage, prevPage } from "../redux/store";
+import { RootState } from "../redux/store";
 
 const Pagination = () => {
   const { currentPage } = useSelector((state: RootState) => state.pagination);
