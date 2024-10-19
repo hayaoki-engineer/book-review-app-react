@@ -20,15 +20,12 @@ const Header = () => {
         <Flex align="center">
           {isLoggedIn ? (
             <Flex align="center">
-              <Link
-                onClick={() => navigate("/profile")}
-                mr={4}
-                color="teal.200"
-              >
+              <Link onClick={() => navigate("/profile")} mr={4} color="white">
                 プロフィール編集
               </Link>
               <Button
-                colorScheme="red"
+                backgroundColor="red.600"
+                color="white"
                 variant="outline"
                 onClick={handleLogout}
               >
