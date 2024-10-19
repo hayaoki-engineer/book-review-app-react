@@ -58,7 +58,7 @@ const NewBookReview = () => {
       }
 
       // 成功したら書籍一覧画面にリダイレクト
-      navigate("/book-reviews");
+      navigate("/");
     } catch {
       setErrorMessage("書籍レビューの投稿に失敗しました。");
     }

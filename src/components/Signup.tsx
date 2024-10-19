@@ -36,7 +36,7 @@ const Signup = () => {
   useEffect(() => {
     const isLoggedIn = !!localStorage.getItem("authToken");
     if (isLoggedIn) {
-      navigate("/book-reviews"); // ログイン済みなら書籍レビュー画面にリダイレクト
+      navigate("/"); // ログイン済みなら書籍レビュー画面にリダイレクト
     }
   }, [navigate]);
 
@@ -90,7 +90,7 @@ const Signup = () => {
       localStorage.setItem("userName", userName); // ユーザー名を保存
 
       // 新規登録成功後に書籍レビュー画面にリダイレクト
-      navigate("/book-reviews");
+      navigate("/");
     } catch {
       setErrorMessage("登録に失敗しました。");
     }

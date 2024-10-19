@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import Pagination from "./Pagination";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode"; // 名前付きインポートに変更
 
 // 書籍レビューの型定義
 type BookReview = {
@@ -22,17 +23,27 @@ type BookReview = {
   detail: string;
   review: string;
   reviewer: string;
+  isMine: boolean;
 };
 
 const BookReviewList = () => {
   const [reviews, setReviews] = useState<BookReview[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [loggedInUserId, setLoggedInUserId] = useState<string | null>(null); // ログイン中のユーザーIDを保持
   const navigate = useNavigate();
 
   const { offset } = useSelector((state: RootState) => state.pagination);
 
   useEffect(() => {
+    // JWT トークンからログイン中のユーザーIDを取得
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      const decodedToken = jwtDecode<{ user_id: string }>(token);
+      setLoggedInUserId(decodedToken.user_id);
+      console.log("LoggedIn UserId:", decodedToken.user_id);
+    }
+
     const currentPage = offset / 10 + 1;
     console.log(`現在のページ: ${currentPage}`);
 
@@ -40,8 +51,14 @@ const BookReviewList = () => {
     const fetchReviews = async () => {
       try {
         setLoading(true);
+        const token = localStorage.getItem("authToken"); // トークンを取得
         const response = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/public/books?offset=${offset}`
+          `${import.meta.env.VITE_API_BASE_URL}/books?offset=${offset}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Authorizationヘッダーを追加
+            },
+          }
         );
         if (!response.ok) {
           throw new Error("データの取得に失敗しました");
@@ -65,41 +82,6 @@ const BookReviewList = () => {
   if (error) {
     return <Text color="red.500">{error}</Text>;
   }
-
-  // 非同期でログを送信する関数
-  const sendLog = async (reviewId: string) => {
-    const token = localStorage.getItem("authToken"); // ローカルストレージからトークンを取得
-    if (!token) {
-      console.error("認証トークンが存在しません。ログインが必要です。");
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/logs`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`, // トークンをヘッダーに追加
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            selectBookId: reviewId, // 期待されるフィールド名に修正
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("ログ送信エラー:", errorData); // サーバーからのエラーメッセージを表示
-        throw new Error("ログ送信に失敗しました");
-      }
-
-      console.log("ログ送信成功");
-    } catch (error) {
-      console.error("ログ送信に失敗しました", error);
-    }
-  };
 
   return (
     <Box maxW="800px" mx="auto" mt={10} p={5}>
@@ -129,17 +111,16 @@ const BookReviewList = () => {
             </Text>
             <Text mt={2}>{review.detail}</Text>
             <Text mt={4}>{review.review}</Text>
-            <Button
-              colorScheme="blue"
-              mt={4}
-              onClick={() => {
-                console.log(`書籍ID: ${review.id} が選択されました。`);
-                sendLog(review.id); // ログを非同期に送信
-                navigate(`/detail/${review.id}`); // ページ遷移
-              }}
-            >
-              詳細を見る
-            </Button>
+
+            {/* ログイン中のユーザーが作成したレビューの場合にのみ編集ボタンを表示 */}
+            {review.isMine && (
+              <Button
+                colorScheme="blue"
+                onClick={() => navigate(`/edit/${review.id}`)}
+              >
+                編集
+              </Button>
+            )}
           </Flex>
         ))}
       </VStack>

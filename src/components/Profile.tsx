@@ -79,7 +79,7 @@ const Profile = () => {
       }
 
       // 成功したら書籍レビュー画面にリダイレクト
-      navigate("/book-reviews");
+      navigate("/");
     } catch {
       setErrorMessage("ユーザー情報の更新に失敗しました。");
     }

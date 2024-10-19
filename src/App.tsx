@@ -9,6 +9,7 @@ import Header from "./components/Header";
 import Profile from "./components/Profile";
 import NewBookReview from "./components/NewBookReview";
 import BookReviewDetail from "./components/BookReviewDetail";
+import EditBookReview from "./components/EditBookReview";
 
 function App() {
   return (
@@ -18,10 +19,11 @@ function App() {
         <Routes>
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/book-reviews" element={<BookReviewList />} />
+          <Route path="/" element={<BookReviewList />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/new" element={<NewBookReview />} />
           <Route path="/detail/:id" element={<BookReviewDetail />} />
+          <Route path="/edit/:id" element={<EditBookReview />} />
         </Routes>
       </ChakraProvider>
     </Provider>
