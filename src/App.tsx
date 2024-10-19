@@ -6,6 +6,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import Header from "./components/Header";
+import Profile from "./components/Profile";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/book-reviews" element={<BookReviewList />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </ChakraProvider>
     </Provider>
