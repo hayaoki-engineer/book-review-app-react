@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import Header from "./components/Header";
 import Profile from "./components/Profile";
+import NewBookReview from "./components/NewBookReview";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/book-reviews" element={<BookReviewList />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/new" element={<NewBookReview />} />
         </Routes>
       </ChakraProvider>
     </Provider>

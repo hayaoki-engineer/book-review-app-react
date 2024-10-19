@@ -9,8 +9,10 @@ import {
   VStack,
   Spinner,
   Link,
+  Button,
 } from "@chakra-ui/react";
 import Pagination from "./Pagination";
+import { useNavigate } from "react-router-dom";
 
 // 書籍レビューの型定義
 type BookReview = {
@@ -26,6 +28,7 @@ const BookReviewList = () => {
   const [reviews, setReviews] = useState<BookReview[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const { offset } = useSelector((state: RootState) => state.pagination);
 
@@ -68,6 +71,9 @@ const BookReviewList = () => {
       <Heading as="h1" mb={6}>
         書籍レビュー一覧
       </Heading>
+      <Button colorScheme="teal" mb={6} onClick={() => navigate("/new")}>
+        新しい書籍レビューを投稿する
+      </Button>
       <VStack spacing={4} align="stretch">
         {reviews.map((review) => (
           <Flex
