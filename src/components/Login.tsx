@@ -29,23 +29,6 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  // ユーザー情報を取得する関数を追加
-  const fetchUserInfo = async (userId: string) => {
-    const response = await fetch(`${apiUrl}/user/${userId}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-      },
-    });
-
-    if (response.ok) {
-      const userData = await response.json();
-      localStorage.setItem("userName", userData.name); // ユーザー名を保存
-    } else {
-      console.error("ユーザー情報の取得に失敗しました");
-    }
-  };
-
   // ログインフォームのデータをAPIに送信
   const onSubmit = async (data: LoginFormValues) => {
     try {
