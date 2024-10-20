@@ -102,7 +102,7 @@ const BookReviewList = () => {
           >
             <Heading fontSize="xl">{review.title}</Heading>
             <Link href={review.url} color="blue.500" isExternal>
-              詳細ページはこちら
+              書籍のURL
             </Link>
             <Text mt={2} fontSize="sm" color="gray.600">
               レビュアー: {review.reviewer}
@@ -119,6 +119,14 @@ const BookReviewList = () => {
                 編集
               </Button>
             )}
+            {/* 詳細ページへのリンクを追加 */}
+            <Button
+              colorScheme="teal"
+              variant="link"
+              onClick={() => navigate(`/detail/${review.id}`)} // 各レビューの詳細ページに遷移
+            >
+              詳細ページを見る
+            </Button>
           </Flex>
         ))}
       </VStack>
