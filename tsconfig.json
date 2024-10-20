@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
     "types": [
+      "vitest/globals",
+      "@testing-library/jest-dom",
       "jest",
       "node",
-      "@testing-library/jest-dom",
       "react-router-dom",
       "react-hook-form"
     ], // 追加
@@ -17,5 +18,8 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ]
+  ],
+  "include": [
+    "./vitest.setup.ts"
+  ],
 }
