@@ -14,6 +14,7 @@ import {
 import Pagination from "./Pagination";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode"; // 名前付きインポートに変更
+import { apiUrl } from "../config";
 
 // 書籍レビューの型定義
 type BookReview = {
@@ -52,14 +53,11 @@ const BookReviewList = () => {
       try {
         setLoading(true);
         const token = localStorage.getItem("authToken"); // トークンを取得
-        const response = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/books?offset=${offset}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // Authorizationヘッダーを追加
-            },
-          }
-        );
+        const response = await fetch(`${apiUrl}/books?offset=${offset}`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Authorizationヘッダーを追加
+          },
+        });
         if (!response.ok) {
           throw new Error("データの取得に失敗しました");
         }

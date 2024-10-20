@@ -10,6 +10,7 @@ export default {
   },
   workers: process.env.CI ? 2 : undefined,
   outputDir: "test-results/",
+  testIgnore: ['**/setupTests.ts'],
   projects: [
     {
       name: "Desktop Chrome",

@@ -13,6 +13,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import { apiUrl } from "../config";
 
 // フォームに対応する型を定義
 type SignupFormValues = {
@@ -66,16 +67,13 @@ const Signup = () => {
         password: data.password,
       };
 
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/users`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestBody),
-        }
-      );
+      const response = await fetch(`${apiUrl}/users`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
 
       if (!response.ok) {
         const errorData = await response.json();

@@ -9,6 +9,7 @@ import {
   Heading,
   Spinner,
 } from "@chakra-ui/react";
+import { apiUrl } from "../config";
 
 // 書籍レビューの型定義
 type BookReview = {
@@ -31,14 +32,11 @@ const EditBookReview = () => {
     const fetchReview = async () => {
       try {
         const token = localStorage.getItem("authToken"); // トークンを取得
-        const response = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/books/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch(`${apiUrl}/books/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         if (!response.ok) {
           throw new Error("書籍レビューの取得に失敗しました");
         }
@@ -57,17 +55,14 @@ const EditBookReview = () => {
   const onSubmit = async (data: BookReview) => {
     try {
       const token = localStorage.getItem("authToken"); // トークンを取得
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/books/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // 認証ヘッダーを追加
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch(`${apiUrl}/books/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // 認証ヘッダーを追加
+        },
+        body: JSON.stringify(data),
+      });
 
       if (!response.ok) {
         throw new Error("書籍レビューの更新に失敗しました");
@@ -83,15 +78,12 @@ const EditBookReview = () => {
   const handleDelete = async () => {
     try {
       const token = localStorage.getItem("authToken");
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/books/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`${apiUrl}/books/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (!response.ok) {
         throw new Error("書籍レビューの削除に失敗しました");

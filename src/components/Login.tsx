@@ -12,6 +12,7 @@ import {
   VStack,
   Text,
 } from "@chakra-ui/react";
+import { apiUrl } from "../config";
 
 // フォームに対応する型を定義
 type LoginFormValues = {
@@ -30,15 +31,12 @@ const Login = () => {
 
   // ユーザー情報を取得する関数を追加
   const fetchUserInfo = async (userId: string) => {
-    const response = await fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/user/${userId}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
-      }
-    );
+    const response = await fetch(`${apiUrl}/user/${userId}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+    });
 
     if (response.ok) {
       const userData = await response.json();
@@ -56,37 +54,33 @@ const Login = () => {
         password: data.password,
       };
 
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/signin`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestBody),
-        }
-      );
+      const response = await fetch(`${apiUrl}/signin`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("Error:", errorData);
+        console.error("Error response from API:", errorData);
         setErrorMessage(
           "ログインに失敗しました。メールアドレスまたはパスワードが正しくありません。"
         );
         return;
       }
 
-      // ログイン成功時にトークンとuser_idを取得
-      const { token, user_id } = await response.json();
+      const { token } = await response.json();
       localStorage.setItem("authToken", token); // トークンを保存
 
-      await fetchUserInfo(user_id); // ユーザー情報を取得してユーザー名を保存
-
       navigate("/"); // ログイン成功時にリダイレクト
-    } catch {
+    } catch (error) {
+      console.error("Login error:", error);
       setErrorMessage("ログインに失敗しました。");
     }
   };
+
 
   return (
     <Box

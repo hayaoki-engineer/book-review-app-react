@@ -12,6 +12,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { apiUrl } from "../config";
 
 // ユーザー情報の型定義
 type UserProfileFormValues = {
@@ -33,14 +34,11 @@ const Profile = () => {
     const fetchUserProfile = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const response = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/users`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch(`${apiUrl}/users`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (!response.ok) {
           throw new Error("ユーザー情報の取得に失敗しました");
@@ -62,17 +60,14 @@ const Profile = () => {
       const token = localStorage.getItem("authToken");
       const requestBody = { name: data.name }; // 更新するデータ（ユーザー名）
 
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/users`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // JWTトークンを設定
-          },
-          body: JSON.stringify(requestBody),
-        }
-      );
+      const response = await fetch(`${apiUrl}/users`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // JWTトークンを設定
+        },
+        body: JSON.stringify(requestBody),
+      });
 
       if (!response.ok) {
         throw new Error("ユーザー情報の更新に失敗しました");

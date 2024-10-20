@@ -7,6 +7,7 @@ const config: Config = {
     "^.+\\.tsx?$": "ts-jest",
   },
   moduleNameMapper: {
+    // CSS Modulesのモック
     "\\.(css|less|scss)$": "identity-obj-proxy",
   },
   testPathIgnorePatterns: ["/node_modules/", "/playwright-tests/"], // Playwrightのテストを無視

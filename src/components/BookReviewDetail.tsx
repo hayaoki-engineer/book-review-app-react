@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Heading, Spinner, Text, VStack, Link } from "@chakra-ui/react";
+import { apiUrl } from "../config";
 
 type BookReview = {
   id: string;
@@ -23,16 +24,13 @@ const BookReviewDetail = () => {
         setLoading(true);
         const token = localStorage.getItem("authToken"); // ローカルストレージからJWTトークンを取得
 
-        const response = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/books/${id}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`, // トークンをヘッダーに追加
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch(`${apiUrl}/books/${id}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`, // トークンをヘッダーに追加
+            "Content-Type": "application/json",
+          },
+        });
 
         if (!response.ok) {
           if (response.status === 401) {

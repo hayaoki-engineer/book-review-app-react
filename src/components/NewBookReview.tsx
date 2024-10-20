@@ -13,6 +13,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { apiUrl } from "../config";
 
 // フォームデータの型定義
 type NewBookReviewFormValues = {
@@ -41,17 +42,14 @@ const NewBookReview = () => {
         review: data.review,
       };
       const token = localStorage.getItem("authToken");
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/books`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(requestBody),
-        }
-      );
+      const response = await fetch(`${apiUrl}/books`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(requestBody),
+      });
 
       if (!response.ok) {
         throw new Error("書籍レビューの投稿に失敗しました");
